@@ -56,7 +56,7 @@ export default async function Home() {
             posts_id: ['id', 'title', 'slug', 'published_date', 'image', 'category', 'seo_description']
           }
         ]
-      }]
+      }] as any
     })).catch(() => null)
   ]);
 
