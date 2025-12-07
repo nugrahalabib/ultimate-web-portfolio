@@ -21,7 +21,7 @@ services:
       PUBLIC_URL: "https://admin.nugrahalabib.com"
     restart: always
 
-  app:
+  ultimate-web-portfolio:
     build:
       context: .
       dockerfile: Dockerfile
