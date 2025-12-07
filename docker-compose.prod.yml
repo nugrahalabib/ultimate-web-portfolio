@@ -1,0 +1,35 @@
+version: "3"
+services:
+  directus:
+    image: directus/directus:10.10.0
+    container_name: directus
+    ports:
+      - "8055:8055"
+    volumes:
+      - ./directus/database:/directus/database
+      - ./directus/uploads:/directus/uploads
+    environment:
+      KEY: "${DIRECTUS_KEY}"
+      SECRET: "${DIRECTUS_SECRET}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      DB_CLIENT: "sqlite3"
+      DB_FILENAME: "/directus/database/data.db"
+      WEBSOCKETS_ENABLED: "true"
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+      PUBLIC_URL: "https://admin.nugrahalabib.com"
+    restart: always
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_DIRECTUS_URL: "https://admin.nugrahalabib.com"
+    container_name: nextjs_app
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_DIRECTUS_URL: "https://admin.nugrahalabib.com"
+    restart: always

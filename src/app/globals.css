@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050505;
+  --foreground: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Utilities if needed */
+@theme {
+  --font-display: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
