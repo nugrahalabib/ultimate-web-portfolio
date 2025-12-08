@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 import JsonLd from '@/components/JsonLd';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 // ... imports
 
@@ -117,15 +118,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         <h3 className="text-lg font-bold text-indigo-400 mb-4 uppercase tracking-wider font-mono">
                             // Executive Summary
                         </h3>
-                        <div className="prose prose-invert prose-sm max-w-none text-neutral-300">
-                            <div dangerouslySetInnerHTML={{ __html: post.key_takeaways }} />
+                        <div className="text-neutral-300">
+                            <MarkdownRenderer content={post.key_takeaways} />
                         </div>
                     </div>
                 )}
 
                 {/* Content */}
-                <article className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-a:text-indigo-400 hover:prose-a:text-indigo-300 prose-img:rounded-xl">
-                    <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                <article className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:text-white prose-a:text-indigo-400 hover:prose-a:text-indigo-300 prose-img:rounded-xl text-neutral-300">
+                    <MarkdownRenderer content={post.content} />
                 </article>
             </main>
 

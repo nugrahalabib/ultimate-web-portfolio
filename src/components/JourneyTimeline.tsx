@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Briefcase, Building2, Smartphone, PenTool, X, ArrowRight, Code, GraduationCap, Rocket, Globe, Award, Users } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 // Map string icon names to components
 const iconMap: any = {
@@ -167,9 +168,9 @@ const JourneyTimeline = ({ items = [], headline, subheadline }: { items?: any[],
 
                                 {/* Modal Content */}
                                 <div className="p-8 overflow-y-auto">
-                                    <div className="prose prose-invert prose-sm max-w-none text-neutral-300 leading-relaxed">
+                                    <div className="text-neutral-300 leading-relaxed">
                                         {selectedItem.detail_content ? (
-                                            <div dangerouslySetInnerHTML={{ __html: selectedItem.detail_content }} />
+                                            <MarkdownRenderer content={selectedItem.detail_content} />
                                         ) : (
                                             <p>{selectedItem.description || "No detailed description available."}</p>
                                         )}

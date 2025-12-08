@@ -20,6 +20,7 @@ import {
     Database,
     Cloud
 } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 // Map string icon names to components
 const iconMap: any = {
@@ -154,9 +155,9 @@ const BentoGridFull = ({ items = [], headline, subheadline }: { items?: any[], h
 
                                 {/* Modal Content */}
                                 <div className="p-8 overflow-y-auto">
-                                    <div className="prose prose-invert prose-sm max-w-none text-neutral-300 leading-relaxed">
+                                    <div className="text-neutral-300 leading-relaxed">
                                         {selectedItem.detail_content ? (
-                                            <div dangerouslySetInnerHTML={{ __html: selectedItem.detail_content }} />
+                                            <MarkdownRenderer content={selectedItem.detail_content} />
                                         ) : (
                                             <p>{selectedItem.description || "No detailed description available."}</p>
                                         )}
