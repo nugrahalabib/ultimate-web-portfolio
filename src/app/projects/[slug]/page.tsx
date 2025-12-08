@@ -8,6 +8,7 @@ import directus from '@/lib/directus';
 import { readItems } from '@directus/sdk';
 import { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -116,8 +117,8 @@ export default async function ProjectDetail(props: PageProps) {
                         </div>
 
                         {/* Content */}
-                        <div className="prose prose-invert prose-lg max-w-none mb-16">
-                            <div dangerouslySetInnerHTML={{ __html: project.content }} />
+                        <div className="prose prose-invert prose-lg max-w-none mb-16 prose-headings:font-bold prose-headings:text-white prose-a:text-indigo-400 text-neutral-300">
+                            <MarkdownRenderer content={project.content} />
                         </div>
 
                         {/* Links */}
