@@ -97,6 +97,10 @@ interface Schema {
         selected_posts: number[] | BlogHighlightPost[];
     };
     blog_highlights_posts: BlogHighlightPost[];
+    posts: Post[];
+    projects: Project[];
+    blog_categories: BlogCategory[];
+    project_categories: ProjectCategory[];
 }
 
 interface BlogHighlightPost {
@@ -125,6 +129,49 @@ interface ProjectCategory {
     slug: string;
     color: string;
     sort: number;
+}
+
+interface BlogCategory {
+    id: number;
+    name: string;
+    slug: string;
+    color: string;
+    sort: number;
+}
+
+interface Post {
+    id: number;
+    title: string;
+    slug: string;
+    content: string;
+    published_date: string;
+    image: string;
+    seo_title: string;
+    seo_description: string;
+    key_takeaways: string;
+    category?: string;
+    category_id?: number | BlogCategory;
+    tags?: string[];
+}
+
+interface Project {
+    id: number;
+    title: string;
+    slug: string;
+    description: string;
+    content: string;
+    image: string;
+    date: string;
+    category?: string;
+    category_id?: number | ProjectCategory;
+    client?: string;
+    role?: string;
+    url?: string;
+    is_featured?: boolean;
+    sort?: number;
+    seo_title?: string;
+    seo_description?: string;
+    tags?: string[];
 }
 
 // Initialize the client
