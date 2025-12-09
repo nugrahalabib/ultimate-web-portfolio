@@ -101,6 +101,14 @@ interface Schema {
     projects: Project[];
     blog_categories: BlogCategory[];
     project_categories: ProjectCategory[];
+    footer_settings: {
+        cta_headline: string;
+        cta_link: string;
+        cta_button_text: string;
+        status_text: string;
+        location_text: string;
+        copyright_text: string;
+    };
 }
 
 interface BlogHighlightPost {
