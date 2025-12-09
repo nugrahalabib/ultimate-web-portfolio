@@ -17,18 +17,29 @@ const outfit = Outfit({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await directus.request(readSingleton('seo')).catch(() => null);
+  const [seo, global] = await Promise.all([
+    directus.request(readSingleton('seo')).catch(() => null),
+    directus.request(readSingleton('global')).catch(() => null)
+  ]);
+
+  // Combine SEO and Global data for easier access
+  const data = { ...seo, ...global };
 
   return {
-    title: seo?.home_title || "Nugraha Labib | CPO at Spead AI",
-    description: seo?.home_description || "Building Logic Beyond AI.",
+    title: data?.home_title || "Nugraha Labib | CPO at Spead AI",
+    description: data?.home_description || "Building Logic Beyond AI.",
     openGraph: {
-      title: seo?.home_title || "Nugraha Labib | CPO at Spead AI",
-      description: seo?.home_description || "Building Logic Beyond AI.",
-      images: seo?.home_og_image ? [`http://localhost:8055/assets/${seo.home_og_image}`] : [],
+      title: data?.home_title || "Nugraha Labib | CPO at Spead AI",
+      description: data?.home_description || "Building Logic Beyond AI.",
+      images: data?.home_og_image ? [`http://localhost:8055/assets/${data.home_og_image}`] : [],
       type: 'website',
     },
-    keywords: seo?.home_keywords || [],
+    keywords: data?.home_keywords?.map((k: any) => k.keyword) || [],
+    icons: data?.website_logo ? {
+      icon: `http://localhost:8055/assets/${data.website_logo}?width=192&height=192`,
+      apple: `http://localhost:8055/assets/${data.website_logo}?width=180&height=180`,
+      shortcut: `http://localhost:8055/assets/${data.website_logo}?width=64&height=64`
+    } : undefined,
   };
 }
 

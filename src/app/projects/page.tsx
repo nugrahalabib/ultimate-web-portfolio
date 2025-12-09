@@ -25,11 +25,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Projects() {
-    const [projects, footerSettings, footerSocials] = await Promise.all([
+    const [projects, categories, globalData, footerSettings, footerSocials] = await Promise.all([
         directus.request(readItems('projects', {
             sort: ['sort'],
-            limit: -1
+            limit: -1,
+            fields: ['*', { category_id: ['*'] }] as any
         })).catch(() => []),
+        directus.request(readItems('project_categories', {
+            sort: ['sort']
+        })).catch(() => []),
+        directus.request(readSingleton('global')).catch(() => null),
         directus.request(readSingleton('footer_settings')).catch(() => ({})),
         directus.request(readItems('footer_socials', { sort: ['sort'] })).catch(() => [])
     ]);
@@ -58,7 +63,7 @@ export default async function Projects() {
                         </div>
 
                         {/* Gallery */}
-                        <ProjectGallery initialItems={projects} />
+                        <ProjectGallery initialItems={projects} categories={categories} />
                     </div>
                 </div>
 

@@ -11,14 +11,8 @@ interface Schema {
         journey_subheadline: string;
         testimonials_headline: string;
         testimonials_subheadline: string;
-    };
-    footer_settings: {
-        cta_headline: string;
-        cta_button_text: string;
-        cta_link: string;
-        status_text: string;
-        location_text: string;
         copyright_text: string;
+        website_logo: string; // File ID
     };
     footer_socials: {
         id: number;
@@ -74,47 +68,6 @@ interface Schema {
         id: number;
         name: string;
         role: string;
-        quote: string;
-        detail_content?: string;
-    }[];
-    projects: {
-        id: number;
-        title: string;
-        category: string;
-        description: string;
-        year: string;
-        link: string;
-        sort: number;
-        slug: string;
-        content: string;
-        image: string; // Added image field
-        // SEO
-        seo_description: string;
-    }[];
-    journey_items: {
-        id: number;
-        category: 'experience' | 'ventures' | 'education' | 'certifications' | 'organization';
-        title: string;
-        subtitle: string;
-        date_range: string;
-        description: string;
-        highlight: boolean;
-        sort: number;
-        details: string;
-        image: string; // UUID of the file
-    }[];
-    posts: {
-        id: number;
-        title: string;
-        slug: string;
-        content: string;
-        image: string;
-        published_date: string;
-        status: 'published' | 'draft' | 'archived';
-        category?: string;
-        tags?: string[];
-        // SEO & AI
-        seo_title: string;
         seo_description: string;
         canonical_url: string;
         is_featured: boolean;
@@ -163,6 +116,14 @@ interface BlogHighlightPost {
 interface BioCategory {
     id: number;
     title: string;
+    sort: number;
+}
+
+interface ProjectCategory {
+    id: number;
+    name: string;
+    slug: string;
+    color: string;
     sort: number;
 }
 

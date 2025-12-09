@@ -1,87 +1,56 @@
-const DIRECTUS_URL = 'http://127.0.0.1:8055';
-const EMAIL = 'admin@nugrahalabib.com';
-const PASSWORD = 'password123';
+import { createDirectus, rest, authentication } from '@directus/sdk';
+import 'dotenv/config';
+
+const directus = createDirectus(process.env.NEXT_PUBLIC_DIRECTUS_URL || 'http://localhost:8055')
+    .with(rest())
+    .with(authentication());
 
 async function fixPermissions() {
-    console.log('🚀 Fixing Permissions...');
-
-    // 1. Login
-    console.log('🔑 Authenticating...');
-    let token;
     try {
-        const loginRes = await fetch(`${DIRECTUS_URL}/auth/login`, {
+        console.log('Authenticating...');
+        const loginRes = await fetch(`${process.env.NEXT_PUBLIC_DIRECTUS_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: EMAIL, password: PASSWORD }),
+            body: JSON.stringify({
+                email: process.env.ADMIN_EMAIL,
+                password: process.env.ADMIN_PASSWORD
+            })
         });
 
-        if (!loginRes.ok) throw new Error(`Login failed: ${loginRes.statusText}`);
+        if (!loginRes.ok) throw new Error('Login failed');
         const loginData = await loginRes.json();
-        token = loginData.data.access_token;
-        console.log('✅ Authenticated!');
-    } catch (error) {
-        console.error('❌ Authentication Error:', error.message);
-        return;
-    }
 
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-    };
+        // Update permissions for 'project_categories' by posting simple payload
+        // Role: null (for Public)
 
-    // 2. Get Public Role ID
-    const rolesRes = await fetch(`${DIRECTUS_URL}/roles`, { headers });
-    const roles = (await rolesRes.json()).data;
-    const publicRole = roles.find(r => r.name === 'Public') || null; // Public role is usually null in permissions, but let's check permissions directly.
+        const permissionPayload = {
+            role: null, // Public Role is NULL
+            collection: 'project_categories',
+            action: 'read',
+            permissions: {}, // Full read access
+            fields: '*'
+        };
 
-    // Actually, for Public permissions, the role is null.
-    const PUBLIC_ROLE = null;
+        console.log('Granting READ access to project_categories (Public permissions)...');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_DIRECTUS_URL}/permissions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${loginData.data.access_token}`
+            },
+            body: JSON.stringify(permissionPayload)
+        });
 
-    // Helper to grant read access
-    async function grantReadAccess(collection) {
-        process.stdout.write(`   🔹 Granting READ on ${collection}... `);
-
-        // Check existing permission
-        const checkRes = await fetch(`${DIRECTUS_URL}/permissions?filter[role][_null]=true&filter[collection][_eq]=${collection}`, { headers });
-        const existing = (await checkRes.json()).data;
-
-        if (existing.length > 0) {
-            // Update existing
-            const permId = existing[0].id;
-            await fetch(`${DIRECTUS_URL}/permissions/${permId}`, {
-                method: 'PATCH',
-                headers,
-                body: JSON.stringify({
-                    action: 'read',
-                    fields: ['*'], // Grant all fields
-                })
-            });
-            console.log(`✅ Updated.`);
+        if (res.ok) {
+            console.log('✅ Permission granted successfully!');
         } else {
-            // Create new
-            await fetch(`${DIRECTUS_URL}/permissions`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify({
-                    role: PUBLIC_ROLE,
-                    collection: collection,
-                    action: 'read',
-                    fields: ['*'],
-                })
-            });
-            console.log(`✨ Created.`);
+            const err = await res.json();
+            console.log('Notice:', err.errors?.[0]?.message);
         }
+
+    } catch (error) {
+        console.error('Error:', error);
     }
-
-    // Grant access to collections
-    await grantReadAccess('posts');
-    await grantReadAccess('projects');
-    await grantReadAccess('blog_highlights');
-    await grantReadAccess('blog_highlights_posts');
-    await grantReadAccess('seo');
-    await grantReadAccess('global'); // Just in case
-
-    console.log('\n✨ Permissions Fixed!');
 }
 
 fixPermissions();

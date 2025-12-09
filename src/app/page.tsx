@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: seoData?.home_og_image ? [`http://localhost:8055/assets/${seoData.home_og_image}`] : [],
       type: 'website',
     },
-    keywords: seoData?.home_keywords || [],
+    keywords: seoData?.home_keywords?.map((k: any) => k.keyword) || [],
   };
 }
 
@@ -69,6 +69,7 @@ export default async function Home() {
     author: {
       '@type': 'Person',
       name: 'Nugraha Labib',
+      image: globalData?.website_logo ? `http://localhost:8055/assets/${globalData.website_logo}` : undefined,
     },
   };
 

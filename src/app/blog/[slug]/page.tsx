@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
+        keywords: post.seo_keywords?.map((k: any) => k.keyword) || [],
         openGraph: {
             title: post.seo_title || post.title,
             description: post.seo_description || post.content.substring(0, 160),
@@ -40,7 +41,7 @@ async function getPost(slug: string) {
                     // status: { _eq: 'published' }, // Removed filter
                 },
                 limit: 1,
-                fields: ['id', 'title', 'content', 'published_date', 'image', 'seo_title', 'seo_description', 'slug', 'key_takeaways'],
+                fields: ['id', 'title', 'content', 'published_date', 'image', 'seo_title', 'seo_description', 'seo_keywords', 'slug', 'key_takeaways'],
             })
         );
         return posts[0];
@@ -53,7 +54,12 @@ async function getPost(slug: string) {
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const decodedSlug = decodeURIComponent(slug);
-    const post = await getPost(decodedSlug);
+
+    // Fetch post and global settings in parallel
+    const [post, globalData] = await Promise.all([
+        getPost(decodedSlug),
+        directus.request(readSingleton('global')).catch(() => null)
+    ]);
 
     if (!post) {
         notFound();
