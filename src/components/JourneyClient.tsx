@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ThreeBackground from '@/components/ThreeBackground';
 import JourneyItem from '@/components/JourneyItem';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 interface JourneyItemType {
     id: number;
@@ -260,7 +261,7 @@ export default function JourneyClient({ items, footerSettings, footerSocials }: 
                                     {/* Body */}
                                     <div className="prose prose-invert prose-lg max-w-none text-neutral-300 leading-relaxed">
                                         {selectedItem.details ? (
-                                            <div dangerouslySetInnerHTML={{ __html: selectedItem.details }} />
+                                            <MarkdownRenderer content={selectedItem.details} />
                                         ) : (
                                             <p>{selectedItem.description}</p>
                                         )}

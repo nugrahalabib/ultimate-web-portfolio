@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title: seoData?.blog_title || 'Blog - Nugraha Labib',
         description: seoData?.blog_description || 'Thoughts, insights, and articles about Architecture, Business, and Technology.',
-        keywords: seoData?.blog_keywords || [],
+        keywords: seoData?.blog_keywords?.map((k: any) => k.keyword) || [],
         openGraph: {
             title: seoData?.blog_title || 'Blog - Nugraha Labib',
             description: seoData?.blog_description || 'Thoughts, insights, and articles about Architecture, Business, and Technology.',
@@ -30,7 +30,18 @@ async function getPosts() {
             readItems('posts', {
                 // filter: { status: { _eq: 'published' } }, // Removed filter to show all posts
                 sort: ['-published_date'],
-                fields: ['id', 'title', 'slug', 'published_date', 'image', 'seo_description', 'seo_title', 'category', 'tags'],
+                fields: [
+                    'id',
+                    'title',
+                    'slug',
+                    'published_date',
+                    'image',
+                    'seo_description',
+                    'seo_title',
+                    'category', // Keep legacy for fallback
+                    { category_id: ['name', 'slug', 'color'] }, // Expand new relation
+                    'tags'
+                ],
             })
         );
         return posts;
@@ -41,8 +52,10 @@ async function getPosts() {
 }
 
 export default async function BlogPage() {
-    const [posts, footerSettings, footerSocials] = await Promise.all([
+    const [posts, categories, globalData, footerSettings, footerSocials] = await Promise.all([
         getPosts(),
+        directus.request(readItems('blog_categories', { sort: ['sort'] })).catch(() => []),
+        directus.request(readSingleton('global')).catch(() => null),
         directus.request(readSingleton('footer_settings')).catch(() => ({})),
         directus.request(readItems('footer_socials', { sort: ['sort'] })).catch(() => [])
     ]);
@@ -72,7 +85,7 @@ export default async function BlogPage() {
                         </div>
 
                         {/* Interactive Blog List */}
-                        <BlogList initialPosts={posts} />
+                        <BlogList initialPosts={posts} categories={categories} />
                     </div>
                 </main>
 
