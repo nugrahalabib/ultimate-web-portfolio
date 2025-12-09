@@ -110,7 +110,7 @@ const Footer = ({ settings, socialLinks = [] }: { settings?: any, socialLinks?: 
                     {/* Right: Copyright */}
                     <div className="text-right">
                         <span className="font-mono text-xs text-neutral-600 tracking-wider">
-                            {settings?.copyright_text || '© 2025 NUGRAHA LABIB MUJADDID'}
+                            {settings?.copyright_text || '© 2025 NUGRAHA LABIB MUJADDID (v2.0)'}
                         </span>
                     </div>
                 </div>
