@@ -1,4 +1,4 @@
-import { readItems } from '@directus/sdk';
+import { readItems, readSingleton } from '@directus/sdk';
 import directus from '@/lib/directus';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import { Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import JsonLd from '@/components/JsonLd';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 // Generate Metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -16,21 +18,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
-        keywords: post.seo_keywords?.map((k: any) => k.keyword) || [],
+        keywords: post.tags || [], // Use tags as keywords
         openGraph: {
             title: post.seo_title || post.title,
             description: post.seo_description || post.content.substring(0, 160),
-            images: post.image ? [`http://localhost:8055/assets/${post.image}`] : [],
+            images: post.image ? [`${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.image}`] : [],
             type: 'article',
             publishedTime: post.published_date,
         },
     };
 }
-
-import JsonLd from '@/components/JsonLd';
-import MarkdownRenderer from '@/components/MarkdownRenderer';
-
-// ... imports
 
 async function getPost(slug: string) {
     try {
@@ -38,13 +35,25 @@ async function getPost(slug: string) {
             readItems('posts', {
                 filter: {
                     slug: { _eq: slug },
-                    // status: { _eq: 'published' }, // Removed filter
                 },
                 limit: 1,
-                fields: ['id', 'title', 'content', 'published_date', 'image', 'seo_title', 'seo_description', 'seo_keywords', 'slug', 'key_takeaways'],
+                fields: [
+                    'id',
+                    'title',
+                    'content',
+                    'published_date',
+                    'image',
+                    'seo_title',
+                    'seo_description',
+                    { category_id: ['name', 'slug', 'color'] },
+                    'category',
+                    'slug',
+                    'key_takeaways',
+                    'tags' // Fetch tags instead of seo_keywords
+                ],
             })
         );
-        return posts[0];
+        return posts[0] as any; // Cast to any to bypass strict ID-only inference for now, or define interface
     } catch (error: any) {
         console.error('Error fetching post:', error?.errors || error);
         return null;
@@ -71,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         '@type': 'BlogPosting',
         headline: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
-        image: post.image ? [`http://localhost:8055/assets/${post.image}`] : [],
+        image: post.image ? [`${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.image}`] : [],
         datePublished: post.published_date,
         author: {
             '@type': 'Person',
