@@ -72,7 +72,7 @@ export default async function ProjectDetail(props: PageProps) {
             '@type': 'Person',
             name: 'Nugraha Labib',
         },
-        dateCreated: project.year,
+        dateCreated: project.date,
         url: `https://nugrahalabib.com/projects/${project.slug}`,
         genre: project.category,
     };
@@ -103,7 +103,7 @@ export default async function ProjectDetail(props: PageProps) {
                                     <Tag size={14} /> {project.category}
                                 </span>
                                 <span className="px-3 py-1 rounded-full bg-white/5 text-neutral-400 text-sm font-mono flex items-center gap-2">
-                                    <Calendar size={14} /> {project.year}
+                                    <Calendar size={14} /> {new Date(project.date).getFullYear()}
                                 </span>
                             </div>
 
@@ -122,10 +122,10 @@ export default async function ProjectDetail(props: PageProps) {
                         </div>
 
                         {/* Links */}
-                        {project.link && project.link !== '#' && (
+                        {project.url && project.url !== '#' && (
                             <div className="border-t border-white/10 pt-8">
                                 <a
-                                    href={project.link}
+                                    href={project.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-bold hover:bg-gray-200 transition-colors"
