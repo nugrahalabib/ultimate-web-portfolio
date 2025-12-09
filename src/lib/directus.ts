@@ -160,6 +160,7 @@ interface Post {
     category?: string;
     category_id?: number | BlogCategory;
     tags?: string[];
+    status?: string;
 }
 
 interface Project {
@@ -180,6 +181,7 @@ interface Project {
     seo_title?: string;
     seo_description?: string;
     tags?: string[];
+    status?: string;
 }
 
 // Initialize the client
