@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import JourneyPageClient from '@/components/JourneyPageClient';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-import directus from '@/lib/directus';
+import directus, { DIRECTUS_URL } from '@/lib/directus';
 import { readSingleton, readItems } from '@directus/sdk';
 import JsonLd from '@/components/JsonLd';
 
@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
         openGraph: {
             title: seoData?.journey_title || 'Journey - Nugraha Labib',
             description: seoData?.journey_description || 'My professional journey, experience, and education.',
-            images: seoData?.journey_og_image ? [`http://localhost:8055/assets/${seoData.journey_og_image}`] : [],
+            images: seoData?.journey_og_image ? [`${DIRECTUS_URL}/assets/${seoData.journey_og_image}`] : [],
             type: 'website',
         },
     };

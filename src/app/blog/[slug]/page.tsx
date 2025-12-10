@@ -1,5 +1,5 @@
 import { readItems, readSingleton } from '@directus/sdk';
-import directus from '@/lib/directus';
+import directus, { DIRECTUS_URL } from '@/lib/directus';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { notFound } from 'next/navigation';
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         '@type': 'BlogPosting',
         headline: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
-        image: post.image ? [`${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.image}`] : [],
+        image: post.image ? [`${DIRECTUS_URL}/assets/${post.image}`] : [],
         datePublished: post.published_date,
         author: {
             '@type': 'Person',
@@ -119,7 +119,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     {post.image && (
                         <div className="w-full aspect-video rounded-2xl overflow-hidden bg-neutral-900 border border-white/10">
                             <img
-                                src={`http://localhost:8055/assets/${post.image}`}
+                                src={`${DIRECTUS_URL}/assets/${post.image}`}
                                 alt={post.title}
                                 className="w-full h-full object-cover"
                             />

@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ThreeBackground from '@/components/ThreeBackground';
 import ProjectGallery from '@/components/ProjectGallery';
-import directus from '@/lib/directus';
+import directus, { DIRECTUS_URL } from '@/lib/directus';
 import { readItems, readSingleton } from '@directus/sdk';
 import { Metadata } from 'next';
 
@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
         openGraph: {
             title: seoData?.projects_title || 'Projects - Nugraha Labib',
             description: seoData?.projects_description || 'Selected works in Architecture, Business, and Technology.',
-            images: seoData?.projects_og_image ? [`http://localhost:8055/assets/${seoData.projects_og_image}`] : [],
+            images: seoData?.projects_og_image ? [`${DIRECTUS_URL}/assets/${seoData.projects_og_image}`] : [],
             type: 'website',
         },
     };

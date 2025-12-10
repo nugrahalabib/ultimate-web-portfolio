@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, Calendar, Tag } from 'lucide-react';
+import { DIRECTUS_URL } from '@/lib/directus';
 
 interface BlogHighlightsProps {
     headline: string;
@@ -42,7 +43,7 @@ export default function BlogHighlights({ headline, posts }: BlogHighlightsProps)
                                 <div className="aspect-video w-full overflow-hidden bg-neutral-900">
                                     {post.image ? (
                                         <img
-                                            src={`http://localhost:8055/assets/${post.image}`}
+                                            src={`${DIRECTUS_URL}/assets/${post.image}`}
                                             alt={post.title}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
