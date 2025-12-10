@@ -24,19 +24,19 @@ interface Schema {
     seo: {
         home_title: string;
         home_description: string;
-        home_keywords: string[];
+        home_keywords: { keyword: string }[];
         home_og_image: string;
         projects_title: string;
         projects_description: string;
-        projects_keywords: string[];
+        projects_keywords: { keyword: string }[];
         projects_og_image: string;
         journey_title: string;
         journey_description: string;
-        journey_keywords: string[];
+        journey_keywords: { keyword: string }[];
         journey_og_image: string;
         blog_title: string;
         blog_description: string;
-        blog_keywords: string[];
+        blog_keywords: { keyword: string }[];
         blog_og_image: string;
     };
     showcase_items: {
