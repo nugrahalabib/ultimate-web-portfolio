@@ -28,7 +28,7 @@ async function getPosts() {
     try {
         const posts = await directus.request(
             readItems('posts', {
-                // filter: { status: { _eq: 'published' } }, // Removed filter to show all posts
+                filter: { status: { _eq: 'published' } },
                 sort: ['-published_date'],
                 fields: [
                     'id',
