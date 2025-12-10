@@ -11,7 +11,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 interface JourneyItemType {
     id: number;
-    category?: string;
+    category: string;
     title: string;
     subtitle: string;
     date_range: string;
@@ -19,7 +19,6 @@ interface JourneyItemType {
     highlight: boolean;
     details?: string;
     image?: string;
-    icon?: string;
 }
 
 interface JourneyClientProps {
