@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
-        keywords: post.tags || [], // Use tags as keywords
+        keywords: keywords, // Use processed keywords
         openGraph: {
             title: post.seo_title || post.title,
             description: post.seo_description || post.content.substring(0, 160),
@@ -74,12 +74,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         notFound();
     }
 
+    // Parse tags safely (handle both string[] and object structures)
+    const rawTags = post.tags || [];
+    const keywords = rawTags.map((t: any) => typeof t === 'string' ? t : t.tag || t.keyword || '').filter((t: string) => t);
+
     // JSON-LD Structured Data
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
+        keywords: keywords.join(', '),
         image: post.image ? [`${DIRECTUS_URL}/assets/${post.image}`] : [],
         datePublished: post.published_date,
         author: {
