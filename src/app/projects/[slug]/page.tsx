@@ -10,8 +10,31 @@ import { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
-// ...
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
+interface PageProps {
+    params: Promise<{
+        slug: string;
+    }>;
+}
+
+// Helper to fetch project data
+async function getProject(slug: string) {
+    try {
+        const projects = await directus.request(readItems('projects', {
+            filter: { slug: { _eq: slug } },
+            limit: 1,
+            fields: ['*', 'seo_description'] // Ensure seo_description is fetched
+        }));
+        return projects[0];
+    } catch (error) {
+        console.error('Error fetching project:', error);
+        return null;
+    }
+}
+
+// Dynamic Metadata
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const params = await props.params;
     const project = await getProject(params.slug);
