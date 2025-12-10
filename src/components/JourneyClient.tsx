@@ -11,7 +11,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 interface JourneyItemType {
     id: number;
-    category: string;
+    category?: string;
     title: string;
     subtitle: string;
     date_range: string;
@@ -19,6 +19,7 @@ interface JourneyItemType {
     highlight: boolean;
     details?: string;
     image?: string;
+    icon?: string;
 }
 
 interface JourneyClientProps {
@@ -39,12 +40,29 @@ export default function JourneyClient({ items, footerSettings, footerSocials }: 
     const [activeSection, setActiveSection] = useState('experience');
     const [selectedItem, setSelectedItem] = useState<JourneyItemType | null>(null);
 
-    // Filter items by category (Case Insensitive)
-    const experience = items.filter(i => i.category?.toLowerCase() === 'experience');
-    const ventures = items.filter(i => i.category?.toLowerCase() === 'ventures');
-    const education = items.filter(i => i.category?.toLowerCase() === 'education');
-    const certifications = items.filter(i => i.category?.toLowerCase() === 'certifications');
-    const organization = items.filter(i => i.category?.toLowerCase() === 'organization');
+    // Helper to determine category
+    const getCategory = (item: JourneyItemType) => {
+        if (item.category) return item.category.toLowerCase();
+
+        // Fallback based on icon
+        const icon = item.image ? 'default' : (item as any).icon; // item.icon might be passed but not in type
+        switch (icon) {
+            case 'Briefcase': return 'experience';
+            case 'Building':
+            case 'Building2': return 'ventures';
+            case 'GraduationCap': return 'education';
+            case 'Award': return 'certifications';
+            case 'Users': return 'organization';
+            default: return 'experience'; // Default to experience
+        }
+    };
+
+    // Filter items by category (Smart Fallback)
+    const experience = items.filter(i => getCategory(i) === 'experience');
+    const ventures = items.filter(i => getCategory(i) === 'ventures');
+    const education = items.filter(i => getCategory(i) === 'education');
+    const certifications = items.filter(i => getCategory(i) === 'certifications');
+    const organization = items.filter(i => getCategory(i) === 'organization');
 
     const scrollToSection = (id: string) => {
         const element = document.getElementById(id);

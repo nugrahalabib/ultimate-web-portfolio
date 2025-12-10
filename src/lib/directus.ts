@@ -60,6 +60,7 @@ interface Schema {
         description: string;
         icon: string;
         sort: number;
+        category?: string;
         detail_content?: string;
         related_post?: number | { slug: string }; // Relation
         related_project?: number | { slug: string }; // Relation
