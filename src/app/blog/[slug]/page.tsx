@@ -15,6 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const post = await getPost(slug);
     if (!post) return {};
 
+    // Parse tags safely (handle both string[] and object structures)
+    const rawTags = post.tags || [];
+    const keywords = rawTags.map((t: any) => typeof t === 'string' ? t : t.tag || t.keyword || '').filter((t: string) => t);
+
     return {
         title: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
