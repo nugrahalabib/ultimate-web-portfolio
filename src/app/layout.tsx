@@ -26,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = { ...seo, ...global };
 
   return {
+    metadataBase: new URL('https://nugrahalabib.com'),
     title: data?.home_title || "Nugraha Labib | CPO at Spead AI",
     description: data?.home_description || "Building Logic Beyond AI.",
     openGraph: {
