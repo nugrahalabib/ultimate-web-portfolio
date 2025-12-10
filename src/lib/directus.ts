@@ -175,6 +175,8 @@ interface Post {
     category_id?: number | BlogCategory;
     tags?: string[];
     status?: string;
+    canonical_url?: string;
+    is_featured?: boolean;
 }
 
 interface Project {
@@ -196,6 +198,8 @@ interface Project {
     seo_description?: string;
     tags?: string[];
     status?: string;
+    canonical_url?: string;
+    key_takeaways?: string;
 }
 
 // Initialize the client
