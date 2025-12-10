@@ -25,7 +25,8 @@ async function getProject(slug: string) {
         const projects = await directus.request(readItems('projects', {
             filter: { slug: { _eq: slug } },
             limit: 1,
-            fields: ['*', 'seo_description'] // Ensure seo_description is fetched
+            // Ensure all SEO fields and tags are fetched
+            fields: ['*', 'seo_description', 'seo_title', 'tags']
         }));
         return projects[0];
     } catch (error) {
@@ -41,11 +42,16 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
     if (!project) return {};
 
+    // Parse tags safely (handle both string[] and object structures)
+    const rawTags = project.tags || [];
+    const keywords = rawTags.map((t: any) => typeof t === 'string' ? t : t.tag || t.keyword || '').filter((t: string) => t);
+
     return {
-        title: project.title,
+        title: project.seo_title || project.title,
         description: project.seo_description || project.description,
+        keywords: keywords,
         openGraph: {
-            title: project.title,
+            title: project.seo_title || project.title,
             description: project.seo_description || project.description,
             images: project.image ? [`${DIRECTUS_URL}/assets/${project.image}`] : [],
             type: 'website',
@@ -61,12 +67,17 @@ export default async function ProjectDetail(props: PageProps) {
         notFound();
     }
 
+    // Parse tags safely (handle both string[] and object structures) - Reused for consistency
+    const rawTags = project.tags || [];
+    const keywords = rawTags.map((t: any) => typeof t === 'string' ? t : t.tag || t.keyword || '').filter((t: string) => t);
+
     // JSON-LD for Project (CreativeWork)
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'CreativeWork',
-        name: project.title,
+        name: project.seo_title || project.title,
         description: project.seo_description || project.description,
+        keywords: keywords.join(', '),
         image: project.image ? [`${DIRECTUS_URL}/assets/${project.image}`] : [],
         author: {
             '@type': 'Person',
