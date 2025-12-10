@@ -60,8 +60,21 @@ interface Schema {
         description: string;
         icon: string;
         sort: number;
-        category?: string;
         detail_content?: string;
+        related_post?: number | { slug: string }; // Relation
+        related_project?: number | { slug: string }; // Relation
+    }[];
+    journey_items: {
+        id: number;
+        category: string;
+        title: string;
+        subtitle: string;
+        date_range: string;
+        description: string;
+        highlight: boolean;
+        sort: number;
+        image?: string;
+        details?: string;
         related_post?: number | { slug: string }; // Relation
         related_project?: number | { slug: string }; // Relation
     }[];

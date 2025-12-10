@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Journey() {
     // Fetch data from Directus
     const [journeyItems, globalData, footerSettings, footerSocials] = await Promise.all([
-        directus.request(readItems('timeline_entries', {
+        directus.request(readItems('journey_items', {
             sort: ['sort'], // Sort by sort field
             fields: ['*', 'related_post.slug', 'related_project.slug'] as any // Fetch relations
         })).catch(() => []),
