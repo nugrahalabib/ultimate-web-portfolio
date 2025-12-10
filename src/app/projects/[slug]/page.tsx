@@ -23,10 +23,13 @@ interface PageProps {
 async function getProject(slug: string) {
     try {
         const projects = await directus.request(readItems('projects', {
-            filter: { slug: { _eq: slug } },
+            filter: {
+                slug: { _eq: slug },
+                status: { _eq: 'published' } // Enforce published status security
+            },
             limit: 1,
             // Ensure all SEO fields and tags are fetched
-            fields: ['*', 'seo_description', 'seo_title', 'tags']
+            fields: ['*', 'seo_description', 'seo_title', 'tags', 'canonical_url', 'is_featured', 'key_takeaways']
         }));
         return projects[0];
     } catch (error) {
@@ -56,6 +59,9 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
             images: project.image ? [`${DIRECTUS_URL}/assets/${project.image}`] : [],
             type: 'website',
         },
+        alternates: {
+            canonical: project.canonical_url || `https://nugrahalabib.com/projects/${project.slug}`,
+        },
     };
 }
 
@@ -78,6 +84,7 @@ export default async function ProjectDetail(props: PageProps) {
         name: project.seo_title || project.title,
         description: project.seo_description || project.description,
         keywords: keywords.join(', '),
+        abstract: project.key_takeaways || project.seo_description || project.description, // Deep Research readiness
         image: project.image ? [`${DIRECTUS_URL}/assets/${project.image}`] : [],
         author: {
             '@type': 'Person',

@@ -30,6 +30,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             type: 'article',
             publishedTime: post.published_date,
         },
+        alternates: {
+            canonical: post.canonical_url || `https://nugrahalabib.com/blog/${post.slug}`,
+        },
     };
 }
 
@@ -39,6 +42,7 @@ async function getPost(slug: string) {
             readItems('posts', {
                 filter: {
                     slug: { _eq: slug },
+                    status: { _eq: 'published' }, // Ensure only published posts are accessible
                 },
                 limit: 1,
                 fields: [
@@ -53,7 +57,9 @@ async function getPost(slug: string) {
                     'category',
                     'slug',
                     'key_takeaways',
-                    'tags' // Fetch tags instead of seo_keywords
+                    'tags',
+                    'canonical_url', // Fetch new SEO field
+                    'is_featured' // Fetch new field
                 ],
             })
         );
@@ -89,6 +95,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         headline: post.seo_title || post.title,
         description: post.seo_description || post.content.substring(0, 160),
         keywords: keywords.join(', '),
+        abstract: post.key_takeaways || post.seo_description || post.description, // Explicitly map Key Takeaways to Abstract
         image: post.image ? [`${DIRECTUS_URL}/assets/${post.image}`] : [],
         datePublished: post.published_date,
         author: {
