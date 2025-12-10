@@ -97,7 +97,7 @@ export default function LinkBioClient({ settings, categories, links }: { setting
                         <div className="absolute inset-0 rounded-full border-4 border-black bg-neutral-200 overflow-hidden">
                             {settings?.profile_image ? (
                                 <img
-                                    src={`http://localhost:8055/assets/${settings.profile_image}`}
+                                    src={`${process.env.NEXT_PUBLIC_DIRECTUS_URL || 'http://localhost:8055'}/assets/${settings.profile_image}`}
                                     alt="Profile"
                                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                                 />

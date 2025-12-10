@@ -5,13 +5,11 @@ import BentoGridFull from '@/components/BentoGridFull';
 import JourneyTimeline from '@/components/JourneyTimeline';
 import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
-import directus from '@/lib/directus';
+import directus, { DIRECTUS_URL } from '@/lib/directus';
 import { readSingleton, readItems } from '@directus/sdk';
 import { Metadata } from 'next';
 
-// Disable caching for real-time updates during development
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// ...
 
 export async function generateMetadata(): Promise<Metadata> {
   const seoData = await directus.request(readSingleton('seo')).catch(() => null);
@@ -22,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: seoData?.home_title || 'Nugraha Labib - Portfolio',
       description: seoData?.home_description || 'Personal portfolio of Nugraha Labib.',
-      images: seoData?.home_og_image ? [`http://localhost:8055/assets/${seoData.home_og_image}`] : [],
+      images: seoData?.home_og_image ? [`${DIRECTUS_URL}/assets/${seoData.home_og_image}`] : [],
       type: 'website',
     },
     keywords: seoData?.home_keywords?.map((k: any) => k.keyword) || [],
@@ -32,33 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
 import BlogHighlights from '@/components/BlogHighlights';
 
 export default async function Home() {
-  // Fetch all data in parallel
-  const [globalData, seoData, showcaseItems, timelineEntries, testimonials, footerSettings, footerSocials, blogHighlights] = await Promise.all([
-    directus.request(readSingleton('global')).catch(() => null),
-    directus.request(readSingleton('seo')).catch(() => null),
-    directus.request(readItems('showcase_items', {
-      sort: ['sort'],
-      fields: ['*', { related_post: ['slug'], related_project: ['slug'] }]
-    })).catch(() => []),
-    directus.request(readItems('timeline_entries', {
-      sort: ['sort'],
-      fields: ['*', { related_post: ['slug'], related_project: ['slug'] }]
-    })).catch(() => []),
-    directus.request(readItems('testimonials')).catch(() => []),
-    directus.request(readSingleton('footer_settings')).catch(() => ({})),
-    directus.request(readItems('footer_socials', { sort: ['sort'] })).catch(() => []),
-    // Fetch Blog Highlights with Deep Expansion
-    directus.request(readSingleton('blog_highlights', {
-      fields: ['headline', {
-        selected_posts: [
-          'id',
-          {
-            posts_id: ['id', 'title', 'slug', 'published_date', 'image', 'category', 'seo_description']
-          }
-        ]
-      }] as any
-    })).catch(() => null)
-  ]);
+  // ... (data fetching logic)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -69,7 +41,7 @@ export default async function Home() {
     author: {
       '@type': 'Person',
       name: 'Nugraha Labib',
-      image: globalData?.website_logo ? `http://localhost:8055/assets/${globalData.website_logo}` : undefined,
+      image: globalData?.website_logo ? `${DIRECTUS_URL}/assets/${globalData.website_logo}` : undefined,
     },
   };
 

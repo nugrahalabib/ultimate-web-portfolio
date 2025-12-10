@@ -230,7 +230,7 @@ export default function JourneyClient({ items, footerSettings, footerSocials }: 
                                 {selectedItem.image && (
                                     <div className="w-full h-64 relative bg-neutral-900">
                                         <img
-                                            src={`http://localhost:8055/assets/${selectedItem.image}`}
+                                            src={`${process.env.NEXT_PUBLIC_DIRECTUS_URL || 'http://localhost:8055'}/assets/${selectedItem.image}`}
                                             alt={selectedItem.title}
                                             className="w-full h-full object-cover"
                                         />

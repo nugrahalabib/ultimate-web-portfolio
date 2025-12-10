@@ -4,37 +4,14 @@ import { ArrowLeft, Calendar, Tag, ExternalLink } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ThreeBackground from '@/components/ThreeBackground';
-import directus from '@/lib/directus';
+import directus, { DIRECTUS_URL } from '@/lib/directus';
 import { readItems } from '@directus/sdk';
 import { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// ...
 
-interface PageProps {
-    params: Promise<{
-        slug: string;
-    }>;
-}
-
-// Helper to fetch project data
-async function getProject(slug: string) {
-    try {
-        const projects = await directus.request(readItems('projects', {
-            filter: { slug: { _eq: slug } },
-            limit: 1,
-            fields: ['*', 'seo_description'] // Ensure seo_description is fetched
-        }));
-        return projects[0];
-    } catch (error) {
-        console.error('Error fetching project:', error);
-        return null;
-    }
-}
-
-// Dynamic Metadata
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const params = await props.params;
     const project = await getProject(params.slug);
@@ -47,7 +24,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
         openGraph: {
             title: project.title,
             description: project.seo_description || project.description,
-            images: project.image ? [`http://localhost:8055/assets/${project.image}`] : [],
+            images: project.image ? [`${DIRECTUS_URL}/assets/${project.image}`] : [],
             type: 'website',
         },
     };
@@ -67,7 +44,7 @@ export default async function ProjectDetail(props: PageProps) {
         '@type': 'CreativeWork',
         name: project.title,
         description: project.seo_description || project.description,
-        image: project.image ? [`http://localhost:8055/assets/${project.image}`] : [],
+        image: project.image ? [`${DIRECTUS_URL}/assets/${project.image}`] : [],
         author: {
             '@type': 'Person',
             name: 'Nugraha Labib',

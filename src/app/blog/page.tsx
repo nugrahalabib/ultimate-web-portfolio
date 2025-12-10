@@ -1,5 +1,5 @@
 import { readItems, readSingleton } from '@directus/sdk';
-import directus from '@/lib/directus';
+import directus, { DIRECTUS_URL } from '@/lib/directus';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ThreeBackground from '@/components/ThreeBackground';
@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
         openGraph: {
             title: seoData?.blog_title || 'Blog - Nugraha Labib',
             description: seoData?.blog_description || 'Thoughts, insights, and articles about Architecture, Business, and Technology.',
-            images: seoData?.blog_og_image ? [`http://localhost:8055/assets/${seoData.blog_og_image}`] : [],
+            images: seoData?.blog_og_image ? [`${DIRECTUS_URL}/assets/${seoData.blog_og_image}`] : [],
             type: 'website',
         },
     };

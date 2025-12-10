@@ -185,7 +185,9 @@ interface Project {
 }
 
 // Initialize the client
-const directus = createDirectus<Schema>(process.env.NEXT_PUBLIC_DIRECTUS_URL || 'http://localhost:8055')
+export const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL || 'http://localhost:8055';
+
+const directus = createDirectus<Schema>(DIRECTUS_URL)
     .with(rest({
         onRequest: (options) => ({ ...options, cache: 'no-store' }),
     }));
