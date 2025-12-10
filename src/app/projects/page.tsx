@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title: seoData?.projects_title || 'Projects - Nugraha Labib',
         description: seoData?.projects_description || 'Selected works in Architecture, Business, and Technology.',
-        keywords: seoData?.projects_keywords || [],
+        keywords: seoData?.projects_keywords?.map((k: any) => k.keyword) || [],
         openGraph: {
             title: seoData?.projects_title || 'Projects - Nugraha Labib',
             description: seoData?.projects_description || 'Selected works in Architecture, Business, and Technology.',
