@@ -39,12 +39,12 @@ export default function JourneyClient({ items, footerSettings, footerSocials }: 
     const [activeSection, setActiveSection] = useState('experience');
     const [selectedItem, setSelectedItem] = useState<JourneyItemType | null>(null);
 
-    // Filter items by category
-    const experience = items.filter(i => i.category === 'experience');
-    const ventures = items.filter(i => i.category === 'ventures');
-    const education = items.filter(i => i.category === 'education');
-    const certifications = items.filter(i => i.category === 'certifications');
-    const organization = items.filter(i => i.category === 'organization');
+    // Filter items by category (Case Insensitive)
+    const experience = items.filter(i => i.category?.toLowerCase() === 'experience');
+    const ventures = items.filter(i => i.category?.toLowerCase() === 'ventures');
+    const education = items.filter(i => i.category?.toLowerCase() === 'education');
+    const certifications = items.filter(i => i.category?.toLowerCase() === 'certifications');
+    const organization = items.filter(i => i.category?.toLowerCase() === 'organization');
 
     const scrollToSection = (id: string) => {
         const element = document.getElementById(id);
