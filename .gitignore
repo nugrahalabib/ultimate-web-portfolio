@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# directus local database (holds accounts and sessions, never commit)
+/directus/database/
+/data.db*
